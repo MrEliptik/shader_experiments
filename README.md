@@ -10,6 +10,30 @@ As I'm trying to learn shaders with Godot, I'm sharing them here for the communi
 
 If you want more Godot experiments, checkout my [Godot experiments](https://github.com/MrEliptik/godot_experiments).
 
+## Structure
+
+Every shader has its own folder with everything needed inside. 
+
+This will probably duplicate some assets, but at least you know that if you want a particular shader, you can just copy its folder.
+
+    .
+    ├── 2D
+    |   ├── game_of_life            # Load and stress tests
+    │   ├── loading                 # loading effect color over grayscale
+    │   ├── scratch_card            # scratch card effect
+    │   ├── tiled_texture_in_mask   # tile a pattern inside a mask
+    │   └── waving_flag             # 2D waving flag
+    └── 3D                    
+        ├── waving_flag             # 
+        ├── xxxx                    # 
+        └── xxxx                    #
+
+## Shaders
+
+Everything you need to know to use the different shaders.
+
+## Images & GIFS
+
 ## About me
 
 Software engineer & gamedev. 3D, 2D & VR. 
