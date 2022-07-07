@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://icon.png" type="Texture" id=1]
+[ext_resource path="res://2D/loading/loading.gdshader" type="Shader" id=2]
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = ExtResource( 2 )
+shader_param/percentage = 0.481
+
+[node name="Loading" type="Node2D"]
+
+[node name="Icon" type="Sprite" parent="."]
+material = SubResource( 2 )
+position = Vector2( 475, 232 )
+texture = ExtResource( 1 )
