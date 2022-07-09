@@ -34,6 +34,16 @@ Everything you need to know to use the different shaders.
 
 ## Images & GIFS
 
+### Tiling Shader
+<p align="center">
+  <img src="videos_gifs/tiling_shader.gif">
+</p>
+
+### Waving flag 2D
+<p align="center">
+  <img src="videos_gifs/waving_flag_2D.gif">
+</p>
+
 ## About me
 
 Software engineer & gamedev. 3D, 2D & VR. 
