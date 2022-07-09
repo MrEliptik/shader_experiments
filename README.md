@@ -34,6 +34,11 @@ Everything you need to know to use the different shaders.
 
 ## Images & GIFS
 
+### Scratch card
+<p align="center">
+  <img src="videos_gifs/scratch_card.gif">
+</p>
+
 ### Tiling Shader
 <p align="center">
   <img src="videos_gifs/tiling_shader.gif">
