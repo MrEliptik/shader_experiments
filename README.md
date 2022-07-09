@@ -34,6 +34,12 @@ Everything you need to know to use the different shaders.
 
 ## Images & GIFS
 
+### Loading grayscale
+<p align="center">
+  <img src="videos_gifs/loading_grayscale.gif">
+</p>
+
+
 ### Scratch card
 <p align="center">
   <img src="videos_gifs/scratch_card.gif">
