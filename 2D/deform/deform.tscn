@@ -1,0 +1,89 @@
+[gd_scene load_steps=7 format=3 uid="uid://bn6x8shvgxfje"]
+
+[ext_resource type="Shader" path="res://2D/deform/deform.gdshader" id="1_17vxy"]
+[ext_resource type="Texture2D" uid="uid://drljp1vrp0sxo" path="res://2D/deform/character.png" id="1_ylr2w"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_k32xi"]
+shader = ExtResource("1_17vxy")
+shader_parameter/rotation = 0.0
+shader_parameter/rotation_offset = Vector2(0.5, 0.5)
+
+[sub_resource type="Animation" id="Animation_detvc"]
+resource_name = "deform"
+length = 8.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Character:material:shader_parameter/rotation_offset")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 4, 4.025, 8),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0.5, 0.5), Vector2(0.5, 0.5), Vector2(0.5, 0.942), Vector2(0.5, 0.942)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Character:material:shader_parameter/rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1, 3, 4, 5, 7),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2, -2),
+"update": 0,
+"values": [0.0, 1.052, -1.052, 0.0, 0.429, -0.429]
+}
+
+[sub_resource type="Animation" id="Animation_v06pf"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Character:material:shader_parameter/rotation_offset")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0.5, 0.5)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Character:material:shader_parameter/rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_mb73a"]
+_data = {
+"RESET": SubResource("Animation_v06pf"),
+"deform": SubResource("Animation_detvc")
+}
+
+[node name="Deform" type="Node2D"]
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_right = 1152.0
+offset_bottom = 648.0
+color = Color(0.92549, 0.92549, 0.92549, 1)
+
+[node name="Character" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_k32xi")
+position = Vector2(602, 393)
+texture = ExtResource("1_ylr2w")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "deform"
+libraries = {
+"": SubResource("AnimationLibrary_mb73a")
+}
