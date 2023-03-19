@@ -1,0 +1,51 @@
+[gd_scene load_steps=3 format=3 uid="uid://de8cnvkkf2hue"]
+
+[sub_resource type="Shader" id="1"]
+code = "shader_type canvas_item;
+
+uniform sampler2D SCREEN_TEXTURE: hint_screen_texture, filter_linear_mipmap;
+uniform vec2 point1 = vec2(0.45, 0.2);
+uniform vec2 point2 = vec2(0.55, 0.5);
+
+float line(vec2 p1, vec2 p2, float width, vec2 uv)
+{
+	float dist = distance(p1, p2); // Distance between points
+	float dist_uv = distance(p1, uv); // Distance from p1 to current pixel
+
+	// If point is on line, according to dist, it should match current UV
+	// Ideally the '0.001' should be SCREEN_PIXEL_SIZE.x, but we can't use that outside of the fragment function.
+	return 1.0 - floor(1.0 - (0.001 * width) + distance (mix(p1, p2, clamp(dist_uv / dist, 0.0, 1.0)),  uv));
+}
+
+void vertex() {
+	
+}
+
+void fragment() {
+	vec4 screen_tex = texture(SCREEN_TEXTURE, SCREEN_UV);
+	
+	vec3 line_color = vec3(line(point1, point2, 10.0, SCREEN_UV));
+	
+	COLOR = screen_tex + vec4(line_color, 1.0);
+//	COLOR = ;
+}"
+
+[sub_resource type="ShaderMaterial" id="2"]
+shader = SubResource("1")
+shader_parameter/point1 = Vector2(0.729, -0.038)
+shader_parameter/point2 = Vector2(0.238, 1.045)
+
+[node name="ScreenSlash" type="Node2D"]
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+color = Color(0.121569, 0.282353, 0.619608, 1)
+antialiased = true
+polygon = PackedVector2Array(0, 0, 0, 600, 1026, 600, 1026, 0)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Slash" type="ColorRect" parent="CanvasLayer"]
+material = SubResource("2")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
