@@ -55,6 +55,11 @@ Everything you need to know to use the different shaders.
   <img src="videos_gifs/waving_flag_2D.gif">
 </p>
 
+### Rotation deform
+<p align="center">
+  <img src="videos_gifs/character_deform.gif">
+</p>
+
 ## About me
 
 Software engineer & gamedev. 3D, 2D & VR. 
