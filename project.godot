@@ -14,6 +14,16 @@ config/name="shaders_experiments"
 config/features=PackedStringArray("4.0")
 config/icon="res://icon.png"
 
+[display]
+
+window/size/window_width_override=1280
+window/size/window_height_override=720
+
+[editor]
+
+movie_writer/mjpeg_quality=1.0
+movie_writer/movie_file=""
+
 [gui]
 
 common/drop_mouse_on_gui_input_disabled=true
