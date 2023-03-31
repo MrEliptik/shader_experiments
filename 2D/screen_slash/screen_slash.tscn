@@ -1,51 +1,266 @@
-[gd_scene load_steps=3 format=3 uid="uid://de8cnvkkf2hue"]
+[gd_scene load_steps=8 format=3 uid="uid://de8cnvkkf2hue"]
+
+[ext_resource type="Texture2D" uid="uid://d0qr61ewfsx32" path="res://2D/screen_slash/visuals/picture.jpg" id="1_5mir2"]
+[ext_resource type="Script" path="res://2D/screen_slash/camera.gd" id="2_qlf4s"]
 
 [sub_resource type="Shader" id="1"]
 code = "shader_type canvas_item;
 
 uniform sampler2D SCREEN_TEXTURE: hint_screen_texture, filter_linear_mipmap;
+uniform vec4 color_slash_left: source_color;
+uniform vec4 color_slash_right: source_color;
+uniform float color_left_mix: hint_range(0.0, 1.0, 0.01) = 0.5;
+uniform float color_right_mix: hint_range(0.0, 1.0, 0.01) = 0.5;
 uniform vec2 point1 = vec2(0.45, 0.2);
 uniform vec2 point2 = vec2(0.55, 0.5);
+uniform float width = 1.0;
+uniform vec4 color_line: source_color;
 
-float line(vec2 p1, vec2 p2, float width, vec2 uv)
+varying float pixel_size_x;
+
+float line(vec2 p1, vec2 p2, float w, vec2 uv)
 {
 	float dist = distance(p1, p2); // Distance between points
 	float dist_uv = distance(p1, uv); // Distance from p1 to current pixel
 
 	// If point is on line, according to dist, it should match current UV
 	// Ideally the '0.001' should be SCREEN_PIXEL_SIZE.x, but we can't use that outside of the fragment function.
-	return 1.0 - floor(1.0 - (0.001 * width) + distance (mix(p1, p2, clamp(dist_uv / dist, 0.0, 1.0)),  uv));
-}
-
-void vertex() {
-	
+	return 1.0 - floor(1.0 - (pixel_size_x * w) + distance (mix(p1, p2, clamp(dist_uv / dist, 0.0, 1.0)),  uv));
 }
 
 void fragment() {
+	pixel_size_x = SCREEN_PIXEL_SIZE.x;
 	vec4 screen_tex = texture(SCREEN_TEXTURE, SCREEN_UV);
 	
-	vec3 line_color = vec3(line(point1, point2, 10.0, SCREEN_UV));
+	vec3 line_color = vec3(line(point1, point2, width, SCREEN_UV));
 	
-	COLOR = screen_tex + vec4(line_color, 1.0);
-//	COLOR = ;
+	float res = (SCREEN_UV.x-point1.x)*(point2.y-point1.y)-(SCREEN_UV.y-point1.y)*(point2.x-point1.x);
+	float line = 1.0 - line(point1, point2, width, SCREEN_UV);
+	
+	if (res > 0.0) {
+		// Color for debug
+		COLOR = vec4(0.0, 0.0, 1.0, 1.0);
+
+		vec2 offset_uv = SCREEN_UV - vec2(pixel_size_x * width, 0.0);
+		vec4 tex_offseted = texture(SCREEN_TEXTURE, offset_uv);
+		COLOR = mix(tex_offseted, color_slash_right, color_right_mix) + (vec4(line_color, 1.0) * color_line);
+//		COLOR = tex_offseted + vec4(line_color, 1.0);
+	}
+	else if (res < 0.0) {
+		// Color for debug
+//		COLOR = vec4(0.0, 1.0, 0.0, 1.0);
+		vec2 offset_uv = SCREEN_UV + vec2(pixel_size_x * width, 0.0);
+		if ((offset_uv.x-point1.x)*(point2.y-point1.y)-(offset_uv.y-point1.y)*(point2.x-point1.x) == 0.0){
+			COLOR.a = 0.0;
+			COLOR.rgb = vec3(0.0);
+		}
+		else{
+			vec4 tex_offseted = texture(SCREEN_TEXTURE, offset_uv);
+//			COLOR = tex_offseted + vec4(line_color, 1.0);
+			COLOR = mix(tex_offseted, color_slash_left, color_left_mix) + (vec4(line_color, 1.0) * color_line);
+		}
+	}
+	
+	// Just the line
+//	COLOR = screen_tex + vec4(line_color, 1.0);
 }"
 
 [sub_resource type="ShaderMaterial" id="2"]
 shader = SubResource("1")
-shader_parameter/point1 = Vector2(0.729, -0.038)
-shader_parameter/point2 = Vector2(0.238, 1.045)
+shader_parameter/color_slash_left = Color(1, 0, 0.113725, 1)
+shader_parameter/color_slash_right = Color(1, 0, 0.176471, 1)
+shader_parameter/color_left_mix = 0.0
+shader_parameter/color_right_mix = 0.0
+shader_parameter/point1 = Vector2(0.5, 0)
+shader_parameter/point2 = Vector2(0.43, 1)
+shader_parameter/width = 0.0
+shader_parameter/color_line = Color(0.752941, 0.909804, 1, 1)
+
+[sub_resource type="Animation" id="Animation_5ugtt"]
+resource_name = "slash"
+length = 2.7
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CanvasLayer/Slash:material:shader_parameter/width")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.3, 0.4, 0.8, 1.1, 1.175, 1.6, 1.8, 1.85, 2, 2.175, 2.225, 2.475),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2),
+"update": 0,
+"values": [0.0, 35.0, 0.0, 0.0, 17.0, 0.0, 0.0, 5.0, 0.0, 0.0, 15.0, 0.0]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Camera2D")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.3, 1.1, 1.8, 2.2),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"values": [{
+"args": [0.5, 25.0, 15.0],
+"method": &"shake"
+}, {
+"args": [0.35, 25.0, 12.0],
+"method": &"shake"
+}, {
+"args": [0.3, 20.0, 9.0],
+"method": &"shake"
+}, {
+"args": [0.4, 20.0, 10.0],
+"method": &"shake"
+}]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("CanvasLayer/Slash:material:shader_parameter/point1")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.8, 0.9, 1.6, 1.7, 2.1, 2.175, 2.5),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2, -2, -2, -2),
+"update": 0,
+"values": [Vector2(0.5, 0), Vector2(0.5, 0), Vector2(0.308, 0), Vector2(0.308, 0), Vector2(0.401, 0), Vector2(0.401, 0), Vector2(0.486, 0), Vector2(0.486, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("CanvasLayer/Slash:material:shader_parameter/point2")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.8, 0.9, 1.6, 1.7, 2.1, 2.175, 2.5),
+"transitions": PackedFloat32Array(-2, -2, -2, -2, -2, -2, -2, -2),
+"update": 0,
+"values": [Vector2(0.43, 1), Vector2(0.43, 1), Vector2(0.562, 1), Vector2(0.562, 1), Vector2(0.233, 1), Vector2(0.233, 1), Vector2(0.766, 1), Vector2(0.766, 1)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("CanvasLayer/Slash:material:shader_parameter/color_left_mix")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0.3, 0.4, 0.6),
+"transitions": PackedFloat32Array(-2, -2, -2),
+"update": 0,
+"values": [0.0, 0.5, 0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("CanvasLayer/Slash:material:shader_parameter/color_right_mix")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0.3, 0.4, 0.6),
+"transitions": PackedFloat32Array(-2, -2, -2),
+"update": 0,
+"values": [0.0, 0.5, 0.0]
+}
+
+[sub_resource type="Animation" id="Animation_pupcn"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CanvasLayer/Slash:material:shader_parameter/width")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CanvasLayer/Slash:material:shader_parameter/point1")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0.5, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("CanvasLayer/Slash:material:shader_parameter/point2")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0.43, 1)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("CanvasLayer/Slash:material:shader_parameter/color_left_mix")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("CanvasLayer/Slash:material:shader_parameter/color_right_mix")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_8smfb"]
+_data = {
+"RESET": SubResource("Animation_pupcn"),
+"slash": SubResource("Animation_5ugtt")
+}
 
 [node name="ScreenSlash" type="Node2D"]
 
-[node name="Polygon2D" type="Polygon2D" parent="."]
-color = Color(0.121569, 0.282353, 0.619608, 1)
-antialiased = true
-polygon = PackedVector2Array(0, 0, 0, 600, 1026, 600, 1026, 0)
-
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
+follow_viewport_enabled = true
+
+[node name="BG" type="TextureRect" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_5mir2")
+expand_mode = 3
+stretch_mode = 6
 
 [node name="Slash" type="ColorRect" parent="CanvasLayer"]
 material = SubResource("2")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(576, 324)
+zoom = Vector2(1.145, 1.145)
+script = ExtResource("2_qlf4s")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "slash"
+movie_quit_on_finish = true
+libraries = {
+"": SubResource("AnimationLibrary_8smfb")
+}
