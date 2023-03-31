@@ -18,9 +18,9 @@ This will probably duplicate some assets, but at least you know that if you want
 
     .
     ├── 2D
-    |   ├── game_of_life            # Load and stress tests
     │   ├── loading                 # loading effect color over grayscale
     │   ├── scratch_card            # scratch card effect
+    │   ├── screen slash            # screen slash shader
     │   ├── tiled_texture_in_mask   # tile a pattern inside a mask
     │   └── waving_flag             # 2D waving flag
     └── 3D                    
