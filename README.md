@@ -18,6 +18,7 @@ This will probably duplicate some assets, but at least you know that if you want
 
     .
     ├── 2D
+    │   ├── dissolve_burn           # dissolve shader with burn edge
     │   ├── loading                 # loading effect color over grayscale
     │   ├── scratch_card            # scratch card effect
     │   ├── screen slash            # screen slash shader
@@ -34,31 +35,14 @@ Everything you need to know to use the different shaders.
 
 ## Images & GIFS
 
-### Loading grayscale
-<p align="center">
-  <img src="videos_gifs/loading_grayscale.gif">
-</p>
-
-
-### Scratch card
-<p align="center">
-  <img src="videos_gifs/scratch_card.gif">
-</p>
-
-### Tiling Shader
-<p align="center">
-  <img src="videos_gifs/tiling_shader.gif">
-</p>
-
-### Waving flag 2D
-<p align="center">
-  <img src="videos_gifs/waving_flag_2D.gif">
-</p>
-
-### Rotation deform
-<p align="center">
-  <img src="videos_gifs/character_deform.gif">
-</p>
+<p float="left">
+    <a href=scenes/loading_animation><img src="videos_gifs/dissolve_burn.gif" width="30%"/></a>
+    <a href=scenes/level_up_again><img src="videos_gifs/character_deform.gif" width="30%"/></a>
+    <a href=scenes/loading_liquid><img src="videos_gifs/waving_flag_2D.gif" width="30%"/></a>
+    <a href=scenes/button_fill_animate><img src="videos_gifs/tiling_shader.gif" width="30%"/></a>
+    <a href=scenes/squishy_toggle><img src="videos_gifs/scratch_card.gif" width="30%"/></a>
+    <a href=scenes/cards_stack><img src="videos_gifs/loading_grayscale.gif" width="30%"/></a>
+</div>
 
 ## About me
 

@@ -11,7 +11,8 @@ config_version=5
 [application]
 
 config/name="shaders_experiments"
-config/features=PackedStringArray("4.0")
+config/tags=PackedStringArray("experiment")
+config/features=PackedStringArray("4.2")
 config/icon="res://icon.png"
 
 [display]
@@ -22,7 +23,7 @@ window/size/window_height_override=720
 [editor]
 
 movie_writer/mjpeg_quality=1.0
-movie_writer/movie_file=""
+movie_writer/movie_file="result.avi"
 
 [gui]
 
