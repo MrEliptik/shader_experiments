@@ -13,7 +13,7 @@ config_version=5
 config/name="shaders_experiments"
 config/tags=PackedStringArray("experiment")
 config/features=PackedStringArray("4.2")
-config/icon="res://icon.png"
+config/icon="res://icon.svg"
 
 [display]
 
